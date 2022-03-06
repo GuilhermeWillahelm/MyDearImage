@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyDearImage.Areas.Identity.Data;
@@ -14,17 +15,44 @@ namespace MyDearImage.Controllers
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        public readonly SignInManager<ApplicationUser> _signInManager;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
+            _signInManager = signInManager;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Post.ToListAsync());
+            if(!_signInManager.IsSignedIn(User))
+            {
+                    return NoContent();
+            }
+            else
+            {
+                return View(await _context.Post.ToListAsync());
+            }
         }
+
+        public IActionResult Home()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> MyPosts()
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return NoContent();
+            }
+            else
+            {
+                return View(await _context.Post.ToListAsync());
+            }
+        }
+
 
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -1,4 +1,5 @@
 ﻿using MyDearImage.Areas.Identity.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyDearImage.Models
 {
@@ -8,6 +9,8 @@ namespace MyDearImage.Models
         public string Title { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+
+        [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
         public int UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }

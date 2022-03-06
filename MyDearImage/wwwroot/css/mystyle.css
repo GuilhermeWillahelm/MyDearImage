@@ -1,0 +1,16 @@
+﻿body {
+}
+.card {
+    display: inline-block;
+    margin-bottom: 12px;
+    margin-left: 5px;
+}
+
+.card a {
+    color: dimgrey;
+}
+
+.mydetail img {
+    max-width: 500px;
+    max-height: 600px;
+}
