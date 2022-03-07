@@ -10,6 +10,10 @@
     color: dimgrey;
 }
 
+.card img {
+    height: 400px;
+}
+
 .mydetail img {
     max-width: 500px;
     max-height: 600px;

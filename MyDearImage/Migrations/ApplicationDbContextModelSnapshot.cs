@@ -324,10 +324,15 @@ namespace MyDearImage.Migrations
             modelBuilder.Entity("MyDearImage.Models.Post", b =>
                 {
                     b.HasOne("MyDearImage.Areas.Identity.Data.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("UserId1");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyDearImage.Areas.Identity.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

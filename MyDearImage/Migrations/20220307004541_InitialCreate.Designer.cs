@@ -12,7 +12,7 @@ using MyDearImage.Areas.Identity.Data;
 namespace MyDearImage.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220305235759_InitialCreate")]
+    [Migration("20220307004541_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -326,10 +326,15 @@ namespace MyDearImage.Migrations
             modelBuilder.Entity("MyDearImage.Models.Post", b =>
                 {
                     b.HasOne("MyDearImage.Areas.Identity.Data.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("UserId1");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyDearImage.Areas.Identity.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }
