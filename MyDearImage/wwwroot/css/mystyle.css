@@ -23,3 +23,7 @@ i {
     font-size: 20px;
     padding: 6px;
 }
+
+.btn i {
+    font-size: 30px;
+}

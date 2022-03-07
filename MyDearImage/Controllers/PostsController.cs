@@ -15,16 +15,17 @@ namespace MyDearImage.Controllers
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public PostsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _signInManager = signInManager;
+            //_applicationUser = applicationUser;
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             if(!_signInManager.IsSignedIn(User))
             {
@@ -32,7 +33,15 @@ namespace MyDearImage.Controllers
             }
             else
             {
-                return View(await _context.Post.ToListAsync());
+                var posts = from p in _context.Post
+                             select p;
+
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    posts = posts.Where(s => s.Title!.Contains(searchString) || s.Description.Contains(searchString));
+                }
+
+                return View(await posts.ToListAsync());
             }
         }
 
@@ -83,8 +92,9 @@ namespace MyDearImage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Image,Description,CreatedDate,UserId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Image,Description,CreatedDate, UserId")] Post post)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(post);

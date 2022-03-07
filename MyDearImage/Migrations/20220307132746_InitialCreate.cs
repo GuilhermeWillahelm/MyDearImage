@@ -166,17 +166,17 @@ namespace MyDearImage.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Post", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Post_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Post_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -219,9 +219,9 @@ namespace MyDearImage.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_UserId1",
+                name: "IX_Post_UserId",
                 table: "Post",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

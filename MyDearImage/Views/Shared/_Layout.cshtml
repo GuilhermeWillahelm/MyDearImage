@@ -35,6 +35,10 @@
                         </li>
                     </ul>
                 </div>
+                <form class="d-md-flex border-1" asp-controller="Posts" asp-action="Index">
+                    <input class="form-control me-0" type="search" placeholder="Search" aria-label="Search" name="SearchString">
+                    <button class="btn btn-dark btn-outline-info" type="submit"><i class="fa-brands fa-searchengin"></i></button>
+                </form>
                 <partial name="_LoginPartial" />
             </div>
         </nav>
