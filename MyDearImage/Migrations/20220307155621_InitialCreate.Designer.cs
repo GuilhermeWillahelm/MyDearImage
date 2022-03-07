@@ -12,7 +12,7 @@ using MyDearImage.Areas.Identity.Data;
 namespace MyDearImage.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220307132746_InitialCreate")]
+    [Migration("20220307155621_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

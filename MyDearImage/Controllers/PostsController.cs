@@ -5,10 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyDearImage.Areas.Identity.Data;
 using MyDearImage.Models;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace MyDearImage.Controllers
 {
@@ -16,12 +19,13 @@ namespace MyDearImage.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public PostsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager)
+        public PostsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _signInManager = signInManager;
-            //_applicationUser = applicationUser;
+            webHostEnvironment = hostEnvironment;
         }
 
         // GET: Posts
@@ -92,11 +96,30 @@ namespace MyDearImage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Image,Description,CreatedDate, UserId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,FormFile,Description,CreatedDate, UserId")] Post post)
         {
+            Account account = new Account(
+                "imagedpy",
+                "882864429614789",
+                "J0ISV-xrcX_pod7fhdyLSJ06Gl4");
+
+            Cloudinary cloudinary = new Cloudinary(account);
             
+            string filename = post.FormFile.FileName;
+            //string pastaFotos = Path.Combine(webHostEnvironment.EnvironmentName);
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription($@"D:/Computador/Images/{filename}"),
+                PublicId = filename.Replace(".jpg", ""),
+                UploadPreset = "bxmouqwf",
+                Folder = "myddearimage"
+            };
+            var uploadResult = cloudinary.Upload(uploadParams);
+
             if (ModelState.IsValid)
             {
+                post.Image = uploadResult.SecureUri.OriginalString;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
