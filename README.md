@@ -6,7 +6,7 @@
 *[Features](#features)
 *[Autor](#autor)
 
-<img src="/InventoryApp/wwwroot/src/mydear.gif" height="425" style="max-width: 100%;"/>
+<img src="/MyDearImage/wwwroot/src/mydear.gif" height="425" style="max-width: 100%;"/>
 
 ## Tecnologias
 <p>Asp.Net Core</p>
