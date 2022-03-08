@@ -168,17 +168,36 @@ namespace MyDearImage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Image,Description,CreatedDate,UserId")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,FormFile,Description")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
+            Account account = new Account("imagedpy", "882864429614789", "J0ISV-xrcX_pod7fhdyLSJ06Gl4");
+            Cloudinary cloudinary = new Cloudinary(account);
+            string filename = post.FormFile.FileName;
 
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription($@"D:/Computador/Images/{filename}"),
+                PublicId = filename.Replace(".jpg", ""),
+                UploadPreset = "bxmouqwf",
+                Folder = "myddearimage",
+                ImageMetadata = true,
+                
+            };
+            var uploadResult = cloudinary.Upload(uploadParams);
             if (ModelState.IsValid)
             {
+                
                 try
                 {
+                    post.Image = uploadResult.SecureUrl.OriginalString;
+                    post.CreatedDate = DateTime.Now;
+                    post.UserId = user.Id;
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
