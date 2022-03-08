@@ -1,13 +1,9 @@
 ﻿#nullable disable
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using MyDearImage.Areas.Identity.Data;
 using MyDearImage.Models;
 using CloudinaryDotNet;
@@ -19,13 +15,15 @@ namespace MyDearImage.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PostsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, IWebHostEnvironment hostEnvironment)
+        public PostsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _signInManager = signInManager;
-            webHostEnvironment = hostEnvironment;
+            _userManager = userManager;
+            _webHostEnvironment = hostEnvironment;
         }
 
         // GET: Posts
@@ -62,7 +60,12 @@ namespace MyDearImage.Controllers
             }
             else
             {
-                return View(await _context.Post.ToListAsync());
+                var posts = from p in _context.Post select p;
+                var user = await _userManager.GetUserAsync(HttpContext.User);
+
+                posts = posts.Where(p => p.UserId == user.Id);
+
+                return View(await posts.ToListAsync());
             }
         }
 
@@ -96,30 +99,33 @@ namespace MyDearImage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,FormFile,Description,CreatedDate, UserId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,FormFile,Description")] Post post)
         {
             Account account = new Account(
                 "imagedpy",
                 "882864429614789",
                 "J0ISV-xrcX_pod7fhdyLSJ06Gl4");
-
             Cloudinary cloudinary = new Cloudinary(account);
-            
+
             string filename = post.FormFile.FileName;
-            //string pastaFotos = Path.Combine(webHostEnvironment.EnvironmentName);
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription($@"D:/Computador/Images/{filename}"),
                 PublicId = filename.Replace(".jpg", ""),
                 UploadPreset = "bxmouqwf",
-                Folder = "myddearimage"
+                Folder = "myddearimage", 
+                ImageMetadata = true
             };
             var uploadResult = cloudinary.Upload(uploadParams);
 
             if (ModelState.IsValid)
             {
-                post.Image = uploadResult.SecureUri.OriginalString;
+                post.Image = uploadResult.SecureUrl.OriginalString;
+                post.CreatedDate = DateTime.Now;
+                post.UserId = user.Id;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
