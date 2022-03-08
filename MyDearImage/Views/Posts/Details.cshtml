@@ -14,13 +14,13 @@
             <img src="@Html.DisplayFor(model => model.Image)"/>
         </dd>
         <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LikeCount) Likes
+        </dd>
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
         </dd>
     </dl>
 </div>

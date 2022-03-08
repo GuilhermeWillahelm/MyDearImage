@@ -78,8 +78,7 @@ namespace MyDearImage.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Post
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _context.Post.FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -101,12 +100,8 @@ namespace MyDearImage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,FormFile,Description")] Post post)
         {
-            Account account = new Account(
-                "imagedpy",
-                "882864429614789",
-                "J0ISV-xrcX_pod7fhdyLSJ06Gl4");
+            Account account = new Account("imagedpy", "882864429614789", "J0ISV-xrcX_pod7fhdyLSJ06Gl4");
             Cloudinary cloudinary = new Cloudinary(account);
-
             string filename = post.FormFile.FileName;
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -126,11 +121,30 @@ namespace MyDearImage.Controllers
                 post.Image = uploadResult.SecureUrl.OriginalString;
                 post.CreatedDate = DateTime.Now;
                 post.UserId = user.Id;
+                post.LikeCount = 0;
+
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(post);
+        }
+
+        public async Task<IActionResult> LikePhoto(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+            else
+            {
+                ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+                var post = await _context.Post.FirstOrDefaultAsync(m => m.Id == id);
+                post.LikeCount++;
+                _context.Update(post);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Posts/Edit/5

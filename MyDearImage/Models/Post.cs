@@ -12,6 +12,7 @@ namespace MyDearImage.Models
         public string Image { get; set; } = string.Empty;
         [NotMapped]
         public IFormFile FormFile { get; set; }
+        public int LikeCount { get; set; }
         public string Description { get; set; } = string.Empty;
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }

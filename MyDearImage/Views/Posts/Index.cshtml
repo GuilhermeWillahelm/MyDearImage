@@ -16,12 +16,14 @@
     <div class="card" style="width: 18rem;">
         <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
             <img src="@Html.DisplayFor(modelItem => item.Image)" class="card-img-top" alt="...">
+            </a>
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+                <a class="btn-like card-text" href='@Url.Action("LikePhoto", "Posts", new {id = item.Id})' role="button"><i class="fa-solid fa-thumbs-up"></i></a>
+                <p class="card-text">@Html.DisplayFor(modelItem => item.LikeCount) Likes</p>
                 <p class="card-text">@Html.DisplayFor(modelItem => item.CreatedDate)</p>
                 <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
             </div>
-        </a>
     </div>
     }
 }

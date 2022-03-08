@@ -15,6 +15,7 @@
             <img src="@Html.DisplayFor(modelItem => item.Image)" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+                <p class="card-text">@Html.DisplayFor(modelItem => item.LikeCount) Likes</p>
                 <p class="card-text">@Html.DisplayFor(modelItem => item.CreatedDate)</p>
                 <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
             </div>
