@@ -17,6 +17,7 @@ namespace MyDearImage.Models
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
         public string UserId { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
         public virtual ApplicationUser? User { get; set; }
     }
 }

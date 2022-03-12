@@ -3,27 +3,33 @@
 @using MyDearImage.Areas.Identity.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<div class="container row">
 @if(SignInManager.IsSignedIn(User))
 {
     @foreach (var item in Model)
     {
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 30rem; padding: 0;">
+        <div class="card-body">
+                <p class="card-title">@Html.DisplayFor(modelItem => item.UserName)</p>
+            </div>
         <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
+            
             <img src="@Html.DisplayFor(modelItem => item.Image)" class="card-img-top" alt="...">
             </a>
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
                 <a class="btn-like card-text" href='@Url.Action("LikePhoto", "Posts", new {id = item.Id})' role="button"><i class="fa-solid fa-thumbs-up"></i></a>
-                <p class="card-text">@Html.DisplayFor(modelItem => item.LikeCount) Likes</p>
+                <p class="card-text" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.LikeCount) Likes</p>
                 <p class="card-text">@Html.DisplayFor(modelItem => item.CreatedDate)</p>
-                <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                <p class="card-text" style="font-size: 12px; font-weight: normal;">@Html.DisplayFor(modelItem => item.Description)</p>
             </div>
     </div>
     }
 }
+</div>

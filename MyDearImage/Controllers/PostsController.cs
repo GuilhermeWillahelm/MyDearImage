@@ -47,9 +47,19 @@ namespace MyDearImage.Controllers
             }
         }
 
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
         {
-            return View();
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return RedirectToPage("Login");
+            }
+            else
+            {
+                var posts = from p in _context.Post select p;
+                var user = await _userManager.GetUserAsync(HttpContext.User);
+
+                return View(await posts.ToListAsync());
+            }
         }
 
         public async Task<IActionResult> MyPosts()
@@ -121,6 +131,7 @@ namespace MyDearImage.Controllers
                 post.Image = uploadResult.SecureUrl.OriginalString;
                 post.CreatedDate = DateTime.Now;
                 post.UserId = user.Id;
+                post.UserName = user.FirstName + " " + user.LastName;
                 post.LikeCount = 0;
 
                 _context.Add(post);
@@ -198,6 +209,7 @@ namespace MyDearImage.Controllers
                     post.Image = uploadResult.SecureUrl.OriginalString;
                     post.CreatedDate = DateTime.Now;
                     post.UserId = user.Id;
+                    post.UserName = user.UserName;
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
@@ -212,7 +224,7 @@ namespace MyDearImage.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyPosts));
             }
             return View(post);
         }
@@ -243,7 +255,7 @@ namespace MyDearImage.Controllers
             var post = await _context.Post.FindAsync(id);
             _context.Post.Remove(post);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyPosts));
         }
 
         private bool PostExists(int id)
