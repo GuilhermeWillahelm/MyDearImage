@@ -47,21 +47,6 @@ namespace MyDearImage.Controllers
             }
         }
 
-        public async Task<IActionResult> Home()
-        {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                return RedirectToPage("Login");
-            }
-            else
-            {
-                var posts = from p in _context.Post select p;
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-
-                return View(await posts.ToListAsync());
-            }
-        }
-
         public async Task<IActionResult> MyPosts()
         {
             if (!_signInManager.IsSignedIn(User))

@@ -1,22 +1,16 @@
 ﻿body {
 }
+.container {
+    justify-content: center
+}
+
 .card {
-    display: inline-block;
     margin-bottom: 12px;
     margin-left: 5px;
     border-color: darkgrey;
     border-radius: 0.5%;
 }
-.post {
-    justify-content: center;
-}
 
-.card .post  {
-    display:  block;
-    margin-bottom: 12px;
-    border-color: darkgrey;
-    border-radius: 0.5%;
-}
 .card p {
     font-weight: bold;
 }

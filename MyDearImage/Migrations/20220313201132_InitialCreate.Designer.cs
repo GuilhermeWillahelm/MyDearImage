@@ -12,8 +12,8 @@ using MyDearImage.Areas.Identity.Data;
 namespace MyDearImage.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220308130221_LikeCount")]
-    partial class LikeCount
+    [Migration("20220313201132_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -265,6 +265,10 @@ namespace MyDearImage.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
